@@ -3,6 +3,11 @@ const form = document.querySelector("[data-contact-form]");
 const note = document.querySelector("[data-form-note]");
 const revealItems = document.querySelectorAll("[data-reveal]");
 const issueButtons = document.querySelectorAll("[data-issue]");
+const carousel = document.querySelector("[data-carousel]");
+const carouselViewport = carousel?.querySelector("[data-carousel-viewport]");
+const carouselTrack = carousel?.querySelector("[data-carousel-track]");
+const previousCarouselButton = carousel?.querySelector("[data-carousel-previous]");
+const nextCarouselButton = carousel?.querySelector("[data-carousel-next]");
 
 const phone = "351917329181";
 const email = "ramosmotorsservice@gmail.com";
@@ -72,3 +77,52 @@ issueButtons.forEach((button) => {
     note.textContent = "Sintoma adicionado. Complete os dados e envie por WhatsApp ou email.";
   });
 });
+
+if (carouselViewport && carouselTrack && previousCarouselButton && nextCarouselButton) {
+  const cards = [...carouselTrack.querySelectorAll(".service-card")];
+  let isDragging = false;
+  let startX = 0;
+  let startScrollLeft = 0;
+
+  const updateCarouselControls = () => {
+    const maxScrollLeft = carouselViewport.scrollWidth - carouselViewport.clientWidth;
+    previousCarouselButton.disabled = carouselViewport.scrollLeft <= 1;
+    nextCarouselButton.disabled = carouselViewport.scrollLeft >= maxScrollLeft - 1;
+  };
+
+  const getScrollStep = () => cards[0].getBoundingClientRect().width + 16;
+
+  const moveCarousel = (direction) => {
+    carouselViewport.scrollBy({ left: direction * getScrollStep(), behavior: "smooth" });
+  };
+
+  previousCarouselButton.addEventListener("click", () => moveCarousel(-1));
+  nextCarouselButton.addEventListener("click", () => moveCarousel(1));
+  carouselViewport.addEventListener("scroll", updateCarouselControls, { passive: true });
+  window.addEventListener("resize", updateCarouselControls);
+
+  carouselViewport.addEventListener("pointerdown", (event) => {
+    isDragging = true;
+    startX = event.clientX;
+    startScrollLeft = carouselViewport.scrollLeft;
+    carouselViewport.classList.add("is-dragging");
+    carouselViewport.setPointerCapture(event.pointerId);
+  });
+
+  carouselViewport.addEventListener("pointermove", (event) => {
+    if (isDragging) {
+      carouselViewport.scrollLeft = startScrollLeft - (event.clientX - startX);
+    }
+  });
+
+  const finishDragging = (event) => {
+    if (!isDragging) return;
+    isDragging = false;
+    carouselViewport.classList.remove("is-dragging");
+    carouselViewport.releasePointerCapture(event.pointerId);
+  };
+
+  carouselViewport.addEventListener("pointerup", finishDragging);
+  carouselViewport.addEventListener("pointercancel", finishDragging);
+  updateCarouselControls();
+}

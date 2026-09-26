@@ -427,6 +427,37 @@ h3 {
   max-width: 1200px;
 }
 
+.service-carousel {
+  position: relative;
+  max-width: 1200px;
+}
+
+.service-carousel-viewport {
+  overflow-x: auto;
+  padding: 4px 2px 24px;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.service-carousel-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.service-carousel-viewport.is-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+.service-carousel .service-grid {
+  display: flex;
+  max-width: none;
+}
+
 .service-section {
   background: #fff;
 }
@@ -442,6 +473,11 @@ h3 {
   padding: 28px;
   box-shadow: var(--soft-shadow);
   transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.service-carousel .service-card {
+  flex: 0 0 min(380px, 86vw);
+  scroll-snap-align: start;
 }
 
 .service-card::before,
@@ -476,11 +512,59 @@ h3 {
 }
 
 .service-card a {
+  position: absolute;
   left: 28px;
   right: 28px;
   bottom: 22px;
   color: var(--brand-blue);
   font-weight: 950;
+}
+
+.carousel-control {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--brand-blue);
+  box-shadow: var(--soft-shadow);
+  font: inherit;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.carousel-control:hover:not(:disabled),
+.carousel-control:focus-visible {
+  background: var(--brand-blue);
+  color: #fff;
+  outline: none;
+}
+
+.carousel-control:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.carousel-control.previous {
+  left: -21px;
+}
+
+.carousel-control.next {
+  right: -21px;
+}
+
+.carousel-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  text-align: center;
 }
 
 .icon {
@@ -914,7 +998,6 @@ textarea {
     align-items: end;
   }
 
-  .service-grid,
   .proof-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -992,6 +1075,14 @@ textarea {
 
   .service-card {
     min-height: 230px;
+  }
+
+  .carousel-control {
+    display: none;
+  }
+
+  .carousel-hint {
+    margin-top: 2px;
   }
 
   .details-list div {

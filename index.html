@@ -120,7 +120,10 @@
           <h2>Serviços automóveis para o dia a dia.</h2>
           <p>Uma seleção clara dos trabalhos mais procurados, com marcação rápida e acompanhamento direto.</p>
         </div>
-        <div class="service-grid">
+        <div class="service-carousel" data-carousel>
+          <button class="carousel-control previous" type="button" data-carousel-previous aria-label="Serviço anterior">‹</button>
+          <div class="service-carousel-viewport" data-carousel-viewport tabindex="0" aria-label="Serviços disponíveis">
+          <div class="service-grid" data-carousel-track>
           <article class="service-card" data-reveal>
             <span class="icon">01</span>
             <h3>Diagnóstico eletrónico</h3>
@@ -157,7 +160,11 @@
             <p>Manutenção e reparação do sistema para climatização eficiente.</p>
             <a href="#contactos">Marcar verificação</a>
           </article>
+          </div>
+          </div>
+          <button class="carousel-control next" type="button" data-carousel-next aria-label="Próximo serviço">›</button>
         </div>
+        <p class="carousel-hint">Arraste para o lado para ver todos os serviços</p>
       </section>
 
       <section class="problem-section" id="vantagens">
