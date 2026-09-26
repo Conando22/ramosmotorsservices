@@ -1,18 +1,12 @@
 const header = document.querySelector("[data-header]");
-const form = document.querySelector("[data-contact-form]");
-const note = document.querySelector("[data-form-note]");
 const revealItems = document.querySelectorAll("[data-reveal]");
-const issueButtons = document.querySelectorAll("[data-issue]");
 const carousel = document.querySelector("[data-carousel]");
 const carouselViewport = carousel?.querySelector("[data-carousel-viewport]");
 const carouselTrack = carousel?.querySelector("[data-carousel-track]");
 const previousCarouselButton = carousel?.querySelector("[data-carousel-previous]");
 const nextCarouselButton = carousel?.querySelector("[data-carousel-next]");
 
-const phone = "351917329181";
-const email = "ramosmotorsservice@gmail.com";
-
-const setHeader = () => {
+const updatePageState = () => {
   header?.classList.toggle("is-solid", window.scrollY > 24);
 
   const scrollable = document.documentElement.scrollHeight - window.innerHeight;
@@ -20,66 +14,27 @@ const setHeader = () => {
   document.documentElement.style.setProperty("--scroll-progress", Math.min(progress, 1).toString());
 };
 
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
+if ("IntersectionObserver" in window) {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
         entry.target.classList.add("is-visible");
         observer.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
-);
+      });
+    },
+    { threshold: 0.15 }
+  );
 
-revealItems.forEach((item, index) => {
-  item.style.transitionDelay = `${Math.min(index % 6, 5) * 70}ms`;
-  observer.observe(item);
-});
+  revealItems.forEach((item) => observer.observe(item));
+}
 
-setHeader();
-window.addEventListener("scroll", setHeader, { passive: true });
-window.addEventListener("resize", setHeader);
-
-form?.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const submitter = event.submitter;
-  const mode = submitter?.dataset.submitMode || "email";
-  const data = new FormData(form);
-  const message = [
-    "Pedido para Ramos Motors Service",
-    "",
-    `Nome: ${data.get("name") || ""}`,
-    `Contacto: ${data.get("contact") || ""}`,
-    `Viatura: ${data.get("vehicle") || ""}`,
-    "",
-    `Mensagem: ${data.get("message") || ""}`,
-  ].join("\n");
-
-  if (mode === "whatsapp") {
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
-    note.textContent = "Mensagem preparada no WhatsApp.";
-    return;
-  }
-
-  window.location.href = `mailto:${email}?subject=${encodeURIComponent("Pedido de orçamento")}&body=${encodeURIComponent(message)}`;
-  note.textContent = "Mensagem preparada no email.";
-});
-
-issueButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const textarea = form?.querySelector('textarea[name="message"]');
-    if (!textarea) return;
-
-    textarea.value = button.dataset.issue || "";
-    form.scrollIntoView({ behavior: "smooth", block: "center" });
-    setTimeout(() => textarea.focus(), 420);
-    note.textContent = "Sintoma adicionado. Complete os dados e envie por WhatsApp ou email.";
-  });
-});
+updatePageState();
+window.addEventListener("scroll", updatePageState, { passive: true });
+window.addEventListener("resize", updatePageState);
 
 if (carouselViewport && carouselTrack && previousCarouselButton && nextCarouselButton) {
-  const cards = [...carouselTrack.querySelectorAll(".service-card")];
+  const firstCard = carouselTrack.querySelector(".service-card");
   let isDragging = false;
   let startX = 0;
   let startScrollLeft = 0;
@@ -90,10 +45,9 @@ if (carouselViewport && carouselTrack && previousCarouselButton && nextCarouselB
     nextCarouselButton.disabled = carouselViewport.scrollLeft >= maxScrollLeft - 1;
   };
 
-  const getScrollStep = () => cards[0].getBoundingClientRect().width + 16;
-
   const moveCarousel = (direction) => {
-    carouselViewport.scrollBy({ left: direction * getScrollStep(), behavior: "smooth" });
+    const step = (firstCard?.getBoundingClientRect().width || 320) + 16;
+    carouselViewport.scrollBy({ left: direction * step, behavior: "smooth" });
   };
 
   previousCarouselButton.addEventListener("click", () => moveCarousel(-1));
@@ -110,16 +64,17 @@ if (carouselViewport && carouselTrack && previousCarouselButton && nextCarouselB
   });
 
   carouselViewport.addEventListener("pointermove", (event) => {
-    if (isDragging) {
-      carouselViewport.scrollLeft = startScrollLeft - (event.clientX - startX);
-    }
+    if (!isDragging) return;
+    carouselViewport.scrollLeft = startScrollLeft - (event.clientX - startX);
   });
 
   const finishDragging = (event) => {
     if (!isDragging) return;
     isDragging = false;
     carouselViewport.classList.remove("is-dragging");
-    carouselViewport.releasePointerCapture(event.pointerId);
+    if (carouselViewport.hasPointerCapture(event.pointerId)) {
+      carouselViewport.releasePointerCapture(event.pointerId);
+    }
   };
 
   carouselViewport.addEventListener("pointerup", finishDragging);
