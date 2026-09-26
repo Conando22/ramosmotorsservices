@@ -24,6 +24,7 @@ html {
 
 body {
   margin: 0;
+  overflow-x: hidden;
   background: var(--paper);
   color: var(--ink);
   text-rendering: optimizeLegibility;
@@ -138,9 +139,10 @@ a {
   position: relative;
   display: grid;
   min-height: 96vh;
+  min-height: min(920px, 100svh);
   overflow: hidden;
   align-items: end;
-  padding: 132px clamp(20px, 9vw, 170px) clamp(54px, 8vw, 100px);
+  padding: 132px max(20px, calc((100vw - 1180px) / 2)) clamp(54px, 8vw, 100px);
   color: #fff;
 }
 
@@ -154,6 +156,7 @@ a {
 
 .hero-image {
   object-fit: cover;
+  object-position: center 48%;
   filter: blur(3px);
   transform: scale(1.02);
 }
@@ -166,8 +169,7 @@ a {
 
 .hero-content {
   position: relative;
-  width: 100%;
-  max-width: 850px;
+  max-width: 830px;
   min-width: 0;
 }
 
@@ -189,8 +191,10 @@ p {
 
 h1 {
   margin-bottom: 20px;
-  font-size: clamp(2.7rem, 6.4vw, 5.2rem);
-  line-height: 0.98;
+  font-size: clamp(3rem, 5.8vw, 5.2rem);
+  line-height: 0.97;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
 }
 
 h2 {
@@ -208,15 +212,22 @@ h3 {
   max-width: 680px;
   margin-bottom: 28px;
   color: rgba(255, 255, 255, 0.86);
-  font-size: clamp(1.08rem, 2.4vw, 1.35rem);
+  font-size: clamp(1.12rem, 2vw, 1.42rem);
   line-height: 1.55;
+}
+
+.hero-copy strong {
+  display: block;
+  font-weight: 800;
 }
 
 .hero-copy span {
   display: block;
-  margin-top: 4px;
+  margin-top: 6px;
   color: rgba(255, 255, 255, 0.7);
-  font-size: 0.78em;
+  font-size: 0.72em;
+  font-weight: 650;
+  letter-spacing: 0.02em;
 }
 
 .hero-actions,
@@ -226,8 +237,13 @@ h3 {
   gap: 12px;
 }
 
+.hero-actions .button {
+  min-width: 180px;
+}
+
 .button {
   display: inline-flex;
+  max-width: 100%;
   min-height: 50px;
   align-items: center;
   justify-content: center;
@@ -268,7 +284,8 @@ h3 {
 .services,
 .process-section,
 .contact-section {
-  padding: clamp(72px, 8vw, 104px) clamp(20px, 6vw, 76px);
+  padding: clamp(72px, 8vw, 104px) max(20px, calc((100vw - 1200px) / 2));
+  scroll-margin-top: 94px;
 }
 
 .services {
@@ -394,7 +411,8 @@ h3 {
 }
 
 .carousel-hint {
-  margin: 0;
+  display: none;
+  margin: 2px 0 0;
   color: var(--muted);
   font-size: 0.86rem;
   text-align: center;
@@ -572,6 +590,16 @@ h3 {
 @media (max-width: 640px) {
   .site-header {
     top: 10px;
+    right: 10px;
+    left: 10px;
+    min-height: 62px;
+    padding: 8px 11px;
+  }
+
+  .brand-mark {
+    flex-basis: 42px;
+    width: 42px;
+    height: 42px;
   }
 
   .brand-name small {
@@ -579,29 +607,111 @@ h3 {
   }
 
   .brand-name strong {
-    max-width: 190px;
+    max-width: 200px;
+    font-size: 0.96rem;
   }
 
   .hero {
-    min-height: 92vh;
-    padding-top: 118px;
+    min-height: 100svh;
+    padding: 116px 20px 42px;
+  }
+
+  .hero-image {
+    object-position: 52% center;
+    transform: scale(1.035);
+  }
+
+  .hero-overlay {
+    background:
+      linear-gradient(90deg, rgba(12, 24, 52, 0.92), rgba(36, 59, 120, 0.58)),
+      linear-gradient(0deg, rgba(12, 24, 52, 0.94), rgba(12, 24, 52, 0.2) 72%);
+  }
+
+  .eyebrow {
+    margin-bottom: 10px;
+    font-size: 0.72rem;
   }
 
   h1 {
-    font-size: clamp(2.3rem, 10vw, 2.85rem);
+    margin-bottom: 18px;
+    font-size: clamp(2.35rem, 10.5vw, 2.85rem);
+    line-height: 1;
+  }
+
+  h2 {
+    font-size: clamp(2rem, 9vw, 2.7rem);
+  }
+
+  .hero-copy {
+    margin-bottom: 24px;
+    font-size: 1.14rem;
+  }
+
+  .hero-copy span {
+    max-width: 290px;
+    font-size: 0.72em;
+    line-height: 1.45;
   }
 
   .button {
     width: 100%;
   }
 
+  .hero-actions {
+    gap: 10px;
+  }
+
+  .services,
+  .process-section,
+  .contact-section {
+    padding: 66px 20px;
+  }
+
+  .section-heading {
+    margin-bottom: 28px;
+  }
+
+  .service-card {
+    flex-basis: calc(100vw - 44px);
+    min-height: 200px;
+    padding: 24px;
+  }
+
   .carousel-control {
     display: none;
+  }
+
+  .carousel-hint {
+    display: block;
   }
 
   .details-list div {
     grid-template-columns: 1fr;
     gap: 4px;
+  }
+
+  .map-panel,
+  .map-panel iframe {
+    min-height: 340px;
+  }
+
+  .footer {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 370px) {
+  .brand-name strong {
+    max-width: 170px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .hero {
+    padding-right: 18px;
+    padding-left: 18px;
   }
 }
 
