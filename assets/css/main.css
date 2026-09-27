@@ -87,15 +87,13 @@ a {
 }
 
 .brand-mark {
-  display: grid;
+  display: block;
   flex: 0 0 46px;
   width: 46px;
   height: 46px;
-  place-items: center;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-  color: var(--blue-dark);
-  font-weight: 950;
+  object-fit: cover;
+  object-position: 50% 18%;
 }
 
 .brand-name strong,
@@ -283,6 +281,7 @@ h3 {
 
 .services,
 .process-section,
+.team-section,
 .contact-section {
   padding: clamp(72px, 8vw, 104px) max(20px, calc((100vw - 1200px) / 2));
   scroll-margin-top: 94px;
@@ -464,6 +463,85 @@ h3 {
   line-height: 1.65;
 }
 
+.team-section {
+  display: grid;
+  gap: 36px;
+  align-items: center;
+  background: #fff;
+}
+
+.team-copy {
+  max-width: 620px;
+}
+
+.team-copy > p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.team-photo-frame {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 16 / 10;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.team-photo-placeholder,
+.team-photo-image {
+  width: 100%;
+  height: 100%;
+}
+
+.team-photo-placeholder {
+  display: grid;
+  place-content: center;
+  padding: 28px;
+  border: 2px dashed rgba(36, 59, 120, 0.28);
+  background:
+    linear-gradient(135deg, rgba(36, 59, 120, 0.08), rgba(213, 173, 93, 0.16)),
+    var(--paper);
+  color: var(--blue-dark);
+  text-align: center;
+}
+
+.team-photo-placeholder span {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 16px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+
+.team-photo-placeholder strong,
+.team-photo-placeholder small {
+  display: block;
+}
+
+.team-photo-placeholder small {
+  margin-top: 7px;
+  color: var(--muted);
+}
+
+.team-photo-image {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
 .contact-section {
   display: grid;
   gap: 36px;
@@ -581,6 +659,7 @@ h3 {
 }
 
 @media (min-width: 1000px) {
+  .team-section,
   .contact-section {
     grid-template-columns: 1.05fr 0.95fr;
     align-items: center;
@@ -663,6 +742,7 @@ h3 {
 
   .services,
   .process-section,
+  .team-section,
   .contact-section {
     padding: 66px 20px;
   }
