@@ -483,7 +483,7 @@ h3 {
 .team-photo-frame {
   position: relative;
   min-width: 0;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1400 / 1123;
   margin: 0;
   overflow: hidden;
   border: 1px solid var(--line);
